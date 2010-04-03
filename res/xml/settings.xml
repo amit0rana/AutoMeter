@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+<EditTextPreference android:defaultValue="14" android:key="@string/base_fare_key" android:title="@string/base_fare_title" android:summary="@string/base_fare" />
+<EditTextPreference android:defaultValue="2" android:summary="@string/base_fare_distance" android:key="@string/base_fare_distance_key" android:title="@string/base_fare_distance_title" />
+<EditTextPreference android:summary="@string/fare_per_unit_distance" android:key="@string/fare_per_unit_distance_key" android:title="@string/fare_per_unit_distance_title" android:defaultValue="7" />
+
+</PreferenceScreen>

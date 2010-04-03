@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="base_fare">The starting fare</string>
+    <string name="fare_per_unit_distance">Fare per Unit distance travelled</string>
+    <string name="fare_per_unit_distance_title">Fare Per Unit Distance</string>
+    <string name="fare_per_unit_distance_key">fare_per_unit_distance_key</string>
+    <string name="base_fare_distance">Distance for the base fare</string>
+    <string name="base_fare_distance_title">Base Fare Distance</string>
+    <string name="base_fare_distance_key">base_fare_distance_key</string>
+    <string name="base_fare_title">Base Fare</string>
+    <string name="base_fare_key">base_fare</string>
     <string name="hello">Hello World, Autometer!</string>
     <string name="app_name">AutoMeter</string>
+    <string name="settings_label">Settings</string>
+    <string name="about_label">About</string>
+    <string name="exit_label">Exit</string>            
 </resources>
