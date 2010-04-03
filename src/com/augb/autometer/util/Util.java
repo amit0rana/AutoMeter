@@ -56,7 +56,7 @@ public final class Util {
 		double remainingDistance = distance - Util.getBaseDistance(context);
 		if(remainingDistance > 0 )
 		{
-			fare = (remainingDistance * Util.getFarePerDistance(context));		
+			fare += (remainingDistance * Util.getFarePerDistance(context));		
 		}
 		return fare;
 	}

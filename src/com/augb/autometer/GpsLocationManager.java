@@ -3,8 +3,6 @@
  */
 package com.augb.autometer;
 
-import java.util.Date;
-
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -21,17 +19,15 @@ import android.os.Bundle;
 public class GpsLocationManager implements LocationListener{
 
 	private static GpsLocationManager mySelf;
+	private GpsLocationCalculator calu;
 	private boolean trackingStarted;
-	private long trackingStartedDT;
-	private long trackingStoppedDT;
 	private LocationManager locMgr; 
 	private Context cntx;
-	private GPSLocation lastKnownLocation;
 	private GpsNotificationListener listener;
 	
 	private GpsLocationManager(){}
 	
-	public static GpsLocationManager GetGPSLocationManger(){
+	public static GpsLocationManager getGPSLocationManger(){
 		if(mySelf == null)
 			mySelf = new GpsLocationManager();
 		return mySelf;
@@ -60,9 +56,10 @@ public class GpsLocationManager implements LocationListener{
 
 			locMgr.requestLocationUpdates(provider, 0, 0, this, cntx
 					.getMainLooper());
+			calu = GpsLocationCalculator.getGpsLocationCalculator(listener,cntx);
+			onLocationChanged(locMgr.getLastKnownLocation(provider));
 			trackingStarted = true;
-			Date now = new Date();
-			this.setTrackingStartedDT(now.getTime());
+			
 			// location engine is started
 			return true;
 		}
@@ -74,8 +71,7 @@ public class GpsLocationManager implements LocationListener{
 			locMgr.removeUpdates(this);
 			trackingStarted = false;
 			locMgr = null;
-			Date now = new Date();
-			this.setTrackingStoppedDT(now.getTime());
+			calu.stopBGTask();
 			return true;
 		}
 		return false;
@@ -84,13 +80,7 @@ public class GpsLocationManager implements LocationListener{
 	@Override
 	public void onLocationChanged(Location newLocation) {
 		if (newLocation != null && newLocation.hasAccuracy()) {
-			GPSLocation loc = new GPSLocation();
-			loc.setLastLocationUpdateDT(newLocation.getTime());
-			loc.setLat(newLocation.getLatitude());
-			loc.setLon(newLocation.getLongitude());
-			loc.setLocAccuracy(newLocation.getAccuracy());
-			loc.setSpeed(newLocation.getSpeed());
-			loc.setBearing(newLocation.getBearing());
+			calu.locationUpdated(newLocation);
 		}
 	}
 	@Override
@@ -107,48 +97,6 @@ public class GpsLocationManager implements LocationListener{
 	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	/**
-	 * @param trackingStartedDT the trackingStartedDT to set
-	 */
-	public void setTrackingStartedDT(long trackingStartedDT) {
-		this.trackingStartedDT = trackingStartedDT;
-	}
-
-	/**
-	 * @return the trackingStartedDT
-	 */
-	public long getTrackingStartedDT() {
-		return trackingStartedDT;
-	}
-
-	/**
-	 * @param trackingStoppedDT the trackingStoppedDT to set
-	 */
-	public void setTrackingStoppedDT(long trackingStoppedDT) {
-		this.trackingStoppedDT = trackingStoppedDT;
-	}
-
-	/**
-	 * @return the trackingStoppedDT
-	 */
-	public long getTrackingStoppedDT() {
-		return trackingStoppedDT;
-	}
-
-	/**
-	 * @param lastKnownLocation the lastKnownLocation to set
-	 */
-	public void setLastKnownLocation(GPSLocation lastKnownLocation) {
-		this.lastKnownLocation = lastKnownLocation;
-	}
-
-	/**
-	 * @return the lastKnownLocation
-	 */
-	public GPSLocation getLastKnownLocation() {
-		return lastKnownLocation;
 	}
 
 	/**

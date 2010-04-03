@@ -1,15 +1,16 @@
 package com.augb.autometer;
 
-import com.augb.autometer.util.Util;
-
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import com.augb.autometer.util.Util;
 
 public class Autometer extends Activity implements GpsNotificationListener{
 	double distanceValue, fareValue;
@@ -35,8 +36,23 @@ public class Autometer extends Activity implements GpsNotificationListener{
         	
         	public void onClick(View v)
         	{//do the toggle thing
-        		GpsLocationManager locManager = GpsLocationManager.GetGPSLocationManger();
-        		locManager.start( Autometer.this, Autometer.this);
+        		if (v instanceof ToggleButton) {
+        			ToggleButton tb = (ToggleButton) v;
+        			if (tb.isChecked()) {
+        				//its in hiring mode, change to vacant
+	        			handler.post(new Runnable() {
+	        	    		@Override
+	        	    		public void run() {
+	        	    			stopMeter();
+	        	    			init();
+	        	    		}
+	        	    	});
+	        		} else {
+	        			GpsLocationManager locManager = GpsLocationManager.getGPSLocationManger();
+		        		locManager.start( Autometer.this, Autometer.this);
+		        		Log.d("test", "start");
+	        		}
+        		}
         	}
         }
         );
@@ -44,15 +60,24 @@ public class Autometer extends Activity implements GpsNotificationListener{
         stopButton.setOnClickListener(new View.OnClickListener (){
         	public void onClick(View v)
         	{
-                ToggleButton VacantButton = (ToggleButton) findViewById(R.id.VacantHiredButton);
-                VacantButton.setChecked(false);
-                //TODO Stop capturing data.
-        
+        		handler.post(new Runnable() {
+    	    		@Override
+    	    		public void run() {
+    	    			stopMeter();        		
+    	    		}
+    	    	});
         	}
         });
         init();
     }
-    
+    private void stopMeter() {
+    	ToggleButton VacantButton = (ToggleButton) findViewById(R.id.VacantHiredButton);
+        VacantButton.setChecked(false);
+        //TODO Stop capturing data.
+        GpsLocationManager locManager = GpsLocationManager.getGPSLocationManger();
+		locManager.stop();
+		Log.d("test", "stop");
+    }
     public void init()
     {
     	distanceValue =  fareValue = 0.0;
@@ -63,15 +88,16 @@ public class Autometer extends Activity implements GpsNotificationListener{
     	
     }
     @Override
-    public void onUpdate(final GPSLocation loc) {
+    public void onUpdate(final GpsLocation loc) {
+    	Log.d("test", "got update: " + loc.toString());
     	handler.post(new Runnable() {
     		@Override
     		public void run() {
     			// TODO Auto-generated method stub
-    	    	distanceValue = loc.getTotalDistance();
+    	    	distanceValue = loc.getTotalDistance()/1000;
     	    	waitingtimeValue = loc.getTotalWaitingDT();//in millisecs
     	    	waitingTimeView.setText(String.format("%d:%d",waitingtimeValue/(1000*60), waitingtimeValue/(1000)));
-    	    	DistanceView.setText(String.format("%.2f", distanceValue/1000));
+    	    	DistanceView.setText(String.format("%.2f", distanceValue));
     	    	fareValue = Util.getFareFromDistance(distanceValue, Autometer.this);
     	    	fareView.setText(String.format("%.2f", fareValue));    	    	
 	
