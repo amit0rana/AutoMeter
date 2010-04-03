@@ -45,4 +45,21 @@ public final class Util {
 		return PreferenceManager.getDefaultSharedPreferences(context).getFloat(context.getString(R.string.fare_per_unit_distance_key), 7);
 	}
 	
+	/**
+	 * return fare from distance
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static double getFareFromDistance(double distance, Context context) {
+		double fare = Util.getBaseFare(context);
+		double remainingDistance = distance - Util.getBaseDistance(context);
+		if(remainingDistance > 0 )
+		{
+			fare = (remainingDistance * Util.getFarePerDistance(context));		
+		}
+		return fare;
+	}
+	
+	
 }

@@ -1,5 +1,7 @@
 package com.augb.autometer;
 
+import com.augb.autometer.util.Util;
+
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -70,7 +72,7 @@ public class Autometer extends Activity implements GpsNotificationListener{
     	    	waitingtimeValue = loc.getTotalWaitingDT();//in millisecs
     	    	waitingTimeView.setText(String.format("%d:%d",waitingtimeValue/(1000*60), waitingtimeValue/(1000)));
     	    	DistanceView.setText(String.format("%.2f", distanceValue/1000));
-    	    	//set fareValue
+    	    	fareValue = Util.getFareFromDistance(distanceValue, Autometer.this);
     	    	fareView.setText(String.format("%.2f", fareValue));    	    	
 	
     		}
