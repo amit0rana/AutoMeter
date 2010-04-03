@@ -1,15 +1,20 @@
 package com.augb.autometer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.augb.autometer.activity.Settings;
 import com.augb.autometer.util.Util;
 
 public class Autometer extends Activity implements GpsNotificationListener{
@@ -17,8 +22,9 @@ public class Autometer extends Activity implements GpsNotificationListener{
 	long waitingtimeValue;
 
 	Handler handler = new Handler();
-	
-    private TextView waitingTimeView, DistanceView, fareView;
+
+	private TextView waitingTimeView, DistanceView, fareView;
+
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {    	
@@ -105,4 +111,27 @@ public class Autometer extends Activity implements GpsNotificationListener{
     	});
     	
     }
+    /**
+	 * Display the menu
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inFlater = getMenuInflater();
+		inFlater.inflate(R.menu.menu, menu);
+		return true;
+	}
+
+	/**
+	 * When the menu item is clicked
+	 */
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.settings:
+			startActivity(new Intent(this, Settings.class));
+
+		}
+		return false;
+
+	}
 }
