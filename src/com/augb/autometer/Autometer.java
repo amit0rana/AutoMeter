@@ -45,18 +45,19 @@ public class Autometer extends Activity implements GpsNotificationListener{
         		if (v instanceof ToggleButton) {
         			ToggleButton tb = (ToggleButton) v;
         			if (tb.isChecked()) {
-        				//its in hiring mode, change to vacant
+        				GpsLocationManager locManager = GpsLocationManager.getGPSLocationManger();
+		        		locManager.start( Autometer.this, Autometer.this);
+		        		Log.d("test", "start");
+		        		init(true);
+	        		} else {
+	        			//its in hiring mode, change to vacant
 	        			handler.post(new Runnable() {
 	        	    		@Override
 	        	    		public void run() {
 	        	    			stopMeter();
-	        	    			init();
+	        	    			init(true);
 	        	    		}
 	        	    	});
-	        		} else {
-	        			GpsLocationManager locManager = GpsLocationManager.getGPSLocationManger();
-		        		locManager.start( Autometer.this, Autometer.this);
-		        		Log.d("test", "start");
 	        		}
         		}
         	}
@@ -74,7 +75,7 @@ public class Autometer extends Activity implements GpsNotificationListener{
     	    	});
         	}
         });
-        init();
+        init(false);
     }
     private void stopMeter() {
     	ToggleButton VacantButton = (ToggleButton) findViewById(R.id.VacantHiredButton);
@@ -84,14 +85,19 @@ public class Autometer extends Activity implements GpsNotificationListener{
 		locManager.stop();
 		Log.d("test", "stop");
     }
-    public void init()
+    public void init(boolean toZero)
     {
     	distanceValue =  fareValue = 0.0;
     	waitingtimeValue = 0;
-    	waitingTimeView.setText("--.--");
-    	DistanceView.setText("---.-");
-    	fareView.setText("---.--");
-    	
+    	if (toZero) {
+    		waitingTimeView.setText("00.00");
+	    	DistanceView.setText("00.0");
+	    	fareView.setText(String.format("%.2f", Util.getBaseFare(this)));
+    	} else {
+	    	waitingTimeView.setText("--.--");
+	    	DistanceView.setText("---.-");
+	    	fareView.setText("---.--");
+    	}
     }
     @Override
     public void onUpdate(final GpsLocation loc) {

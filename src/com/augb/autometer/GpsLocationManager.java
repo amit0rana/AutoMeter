@@ -56,7 +56,9 @@ public class GpsLocationManager implements LocationListener{
 
 			locMgr.requestLocationUpdates(provider, 0, 0, this, cntx
 					.getMainLooper());
-			calu = GpsLocationCalculator.getGpsLocationCalculator(listener,cntx);
+			//calu = GpsLocationCalculator.getGpsLocationCalculator(listener,cntx);
+			calu = new GpsLocationCalculator();
+			calu.startBGTask(listener, cntx);
 			onLocationChanged(locMgr.getLastKnownLocation(provider));
 			trackingStarted = true;
 			
